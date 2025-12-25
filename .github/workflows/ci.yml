@@ -1,0 +1,46 @@
+name: E-Commerce Microservices CI
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Product Service
+        run: cd ProductService && mvn clean test
+
+      - name: Order Service
+        run: cd OrderService && mvn clean test
+
+      - name: Payment Service
+        run: cd PaymentService && mvn clean test
+
+      - name: User Service
+        run: cd UserService && mvn clean test
+
+      - name: Inventory Service
+        run: cd InventoryService && mvn clean test
+
+      - name: API Gateway
+        run: cd ApiGatewayService && mvn clean test
+
+      - name: Config Server
+        run: cd ConfigServer && mvn clean test
+
+      - name: Notification Service
+        run: cd NotificationService && mvn clean test
+
+      - name: Service Registry
+        run: cd ServiceRegistry && mvn clean test
