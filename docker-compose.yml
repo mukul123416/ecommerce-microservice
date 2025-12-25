@@ -1,0 +1,212 @@
+version: '3.8' # Defines the Docker Compose file format version
+
+# ==============================================================================
+# NETWORKS: Defines a private virtual network for container communication
+# ==============================================================================
+networks:
+  microservice-network:
+    driver: bridge # Creates an isolated network for internal service discovery
+
+services:
+
+  # ==============================================================================
+  # 1. INFRASTRUCTURE: Message Broker (Kafka) for Asynchronous Communication
+  # ==============================================================================
+
+  # Zookeeper: Manages and coordinates Kafka brokers
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    container_name: zookeeper-srv
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181 # Port for Zookeeper client connections
+    networks:
+      - microservice-network
+
+  # Kafka: The event streaming platform for inter-service messaging
+  kafka:
+    image: confluentinc/cp-kafka:7.4.0
+    container_name: kafka-srv
+    depends_on:
+      - zookeeper # Kafka requires Zookeeper to be up first
+    ports:
+      - "9092:9092" # External port for host access
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1 # Standard for development environments
+    networks:
+      - microservice-network
+
+  # ==============================================================================
+  # 2. CORE SERVICES: Centralized Configuration and Service Discovery
+  # ==============================================================================
+
+  # Config Server: Provides centralized external configuration for all services
+  config-server:
+    build: ./ConfigServer # Path to the Dockerfile for this service
+    container_name: config-server
+    ports:
+      - "8087:8087"
+    depends_on:
+      - service-registry  # Kafka requires Service-registry to be up first
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-registry:8761/eureka
+    networks:
+      - microservice-network
+
+  # Service Registry (Eureka): The "phonebook" where all services register their location
+  service-registry:
+    build: ./ServiceRegistry
+    container_name: service-registry
+    environment:
+      - EUREKA_HOSTNAME=service-registry
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-registry:8761/eureka/
+      - EUREKA_CLIENT_REGISTER_WITH_EUREKA=false # Registry does not need to register itself
+      - EUREKA_CLIENT_FETCH_REGISTRY=false
+    ports:
+      - "8761:8761"
+    networks:
+      - microservice-network
+
+  # ==============================================================================
+  # 3. EDGE SERVICE: API Gateway (The Single Entry Point)
+  # ==============================================================================
+
+  # API Gateway: Routes all external traffic to the correct microservice
+  api-gateway:
+    build: ./ApiGatewayService
+    container_name: api-gateway
+    ports:
+      - "8086:8086"
+    depends_on:
+      - service-registry
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-registry:8761/eureka
+    networks:
+      - microservice-network
+
+  # ==============================================================================
+  # 4. BUSINESS MICROSERVICES: Domain Logic
+  # ==============================================================================
+
+  # User Service: Handles user management and authentication
+  user-service:
+    build: ./UserService
+    container_name: user-service
+    restart: on-failure # Restarts if the app crashes
+    ports:
+      - "8081:8081"
+    depends_on:
+      - service-registry
+    extra_hosts:
+      - "host.docker.internal:host-gateway" # Allows container to access DB on the local machine
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://host.docker.internal:5432/ecommerce-microservices
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=newpassword
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-registry:8761/eureka
+    networks:
+      - microservice-network
+
+  # Product Service: Manages catalog and product details
+  product-service:
+    build: ./ProductService
+    container_name: product-service
+    restart: on-failure
+    ports:
+      - "8082:8082"
+    depends_on:
+      - kafka
+      - service-registry
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://host.docker.internal:5432/ecommerce-microservices
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=newpassword
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-registry:8761/eureka
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092 # Kafka connection string
+    networks:
+      - microservice-network
+
+  # Order Service: Processes customer orders
+  order-service:
+    build: ./OrderService
+    container_name: order-service
+    restart: on-failure
+    ports:
+      - "8083:8083"
+    depends_on:
+      - kafka
+      - service-registry
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://host.docker.internal:5432/ecommerce-microservices
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=newpassword
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-registry:8761/eureka
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+    networks:
+      - microservice-network
+
+  # Payment Service: Manages financial transactions
+  payment-service:
+    build: ./PaymentService
+    container_name: payment-service
+    restart: on-failure
+    ports:
+      - "8084:8084"
+    depends_on:
+      - kafka
+      - service-registry
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://host.docker.internal:5432/ecommerce-microservices
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=newpassword
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-registry:8761/eureka
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+    networks:
+      - microservice-network
+
+  # Inventory Service: Handles stock levels and availability
+  inventory-service:
+    build: ./InventoryService
+    container_name: inventory-service
+    restart: on-failure
+    ports:
+      - "8085:8085"
+    depends_on:
+      - kafka
+      - service-registry
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://host.docker.internal:5432/ecommerce-microservices
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=newpassword
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-registry:8761/eureka
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+    networks:
+      - microservice-network
+
+  # Notification Service: Sends alerts/emails based on Kafka events
+  notification-service:
+    build: ./NotificationService
+    container_name: notification-service
+    restart: on-failure
+    ports:
+      - "8089:8089"
+    depends_on:
+      - kafka
+      - service-registry
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://service-registry:8761/eureka
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+    networks:
+      - microservice-network
