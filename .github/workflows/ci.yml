@@ -27,7 +27,7 @@ jobs:
       - name: Sonar - Product Service
         run: |
           cd ProductService
-          mvn sonar:sonar \
+          mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.10.0.2594:sonar \
             -Dsonar.projectKey=mukul123416_ProductService \
             -Dsonar.organization=mukul123416 \
             -Dsonar.host.url=https://sonarcloud.io \
@@ -42,7 +42,7 @@ jobs:
       - name: Sonar - Order Service
         run: |
           cd OrderService
-          mvn sonar:sonar \
+          mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.10.0.2594:sonar \
             -Dsonar.projectKey=mukul123416_OrderService \
             -Dsonar.organization=mukul123416 \
             -Dsonar.host.url=https://sonarcloud.io \
@@ -57,7 +57,7 @@ jobs:
       - name: Sonar - Payment Service
         run: |
           cd PaymentService
-          mvn sonar:sonar \
+          mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.10.0.2594:sonar \
             -Dsonar.projectKey=mukul123416_PaymentService \
             -Dsonar.organization=mukul123416 \
             -Dsonar.host.url=https://sonarcloud.io \
@@ -72,7 +72,7 @@ jobs:
       - name: Sonar - User Service
         run: |
           cd UserService
-          mvn sonar:sonar \
+          mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.10.0.2594:sonar \
             -Dsonar.projectKey=mukul123416_UserService \
             -Dsonar.organization=mukul123416 \
             -Dsonar.host.url=https://sonarcloud.io \
@@ -87,7 +87,7 @@ jobs:
       - name: Sonar - Inventory Service
         run: |
           cd InventoryService
-          mvn sonar:sonar \
+          mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.10.0.2594:sonar \
             -Dsonar.projectKey=mukul123416_InventoryService \
             -Dsonar.organization=mukul123416 \
             -Dsonar.host.url=https://sonarcloud.io \
@@ -102,7 +102,7 @@ jobs:
       - name: Sonar - API Gateway
         run: |
           cd ApiGatewayService
-          mvn sonar:sonar \
+          mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.10.0.2594:sonar \
             -Dsonar.projectKey=mukul123416_ApiGatewayService \
             -Dsonar.organization=mukul123416 \
             -Dsonar.host.url=https://sonarcloud.io \
@@ -117,7 +117,7 @@ jobs:
       - name: Sonar - Config Server
         run: |
           cd ConfigServer
-          mvn sonar:sonar \
+          mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.10.0.2594:sonar \
             -Dsonar.projectKey=mukul123416_ConfigServer \
             -Dsonar.organization=mukul123416 \
             -Dsonar.host.url=https://sonarcloud.io \
@@ -132,7 +132,7 @@ jobs:
       - name: Sonar - Notification Service
         run: |
           cd NotificationService
-          mvn sonar:sonar \
+          mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.10.0.2594:sonar \
             -Dsonar.projectKey=mukul123416_NotificationService \
             -Dsonar.organization=mukul123416 \
             -Dsonar.host.url=https://sonarcloud.io \
@@ -147,7 +147,7 @@ jobs:
       - name: Sonar - Service Registry
         run: |
           cd ServiceRegistry
-          mvn sonar:sonar \
+          mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.10.0.2594:sonar \
             -Dsonar.projectKey=mukul123416_ServiceRegistry \
             -Dsonar.organization=mukul123416 \
             -Dsonar.host.url=https://sonarcloud.io \
