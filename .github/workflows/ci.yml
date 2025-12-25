@@ -28,7 +28,7 @@ jobs:
         run: |
           cd ProductService
           mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.10.0.2594:sonar \
-            -Dsonar.projectKey=mukul123416_product-service \
+            -Dsonar.projectKey=mukul123416_ecommerce-microservice-product
             -Dsonar.organization=mukul123416 \
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.login=${{ secrets.SONAR_TOKEN }}
@@ -43,7 +43,7 @@ jobs:
         run: |
           cd OrderService
           mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.10.0.2594:sonar \
-            -Dsonar.projectKey=mukul123416_order-service \
+            -Dsonar.projectKey=mukul123416_ecommerce-microservice-order 
             -Dsonar.organization=mukul123416 \
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.login=${{ secrets.SONAR_TOKEN }}
@@ -58,7 +58,7 @@ jobs:
         run: |
           cd PaymentService
           mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.10.0.2594:sonar \
-            -Dsonar.projectKey=mukul123416_payment-service \
+            -Dsonar.projectKey=mukul123416_ecommerce-microservice-payment
             -Dsonar.organization=mukul123416 \
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.login=${{ secrets.SONAR_TOKEN }}
@@ -73,7 +73,7 @@ jobs:
         run: |
           cd UserService
           mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.10.0.2594:sonar \
-            -Dsonar.projectKey=mukul123416_user-service \
+            -Dsonar.projectKey=mukul123416_ecommerce-microservice-user
             -Dsonar.organization=mukul123416 \
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.login=${{ secrets.SONAR_TOKEN }}
@@ -88,7 +88,7 @@ jobs:
         run: |
           cd InventoryService
           mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.10.0.2594:sonar \
-            -Dsonar.projectKey=mukul123416_inventory-service \
+            -Dsonar.projectKey=mukul123416_ecommerce-microservice-inventory
             -Dsonar.organization=mukul123416 \
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.login=${{ secrets.SONAR_TOKEN }}
@@ -103,7 +103,7 @@ jobs:
         run: |
           cd ApiGatewayService
           mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.10.0.2594:sonar \
-            -Dsonar.projectKey=mukul123416_api-gateway-service \
+            -Dsonar.projectKey=mukul123416_ecommerce-microservice-api-gateway
             -Dsonar.organization=mukul123416 \
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.login=${{ secrets.SONAR_TOKEN }}
@@ -118,7 +118,7 @@ jobs:
         run: |
           cd ConfigServer
           mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.10.0.2594:sonar \
-            -Dsonar.projectKey=mukul123416_config-server \
+            -Dsonar.projectKey=mukul123416_ecommerce-microservice-config
             -Dsonar.organization=mukul123416 \
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.login=${{ secrets.SONAR_TOKEN }}
@@ -133,7 +133,7 @@ jobs:
         run: |
           cd NotificationService
           mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.10.0.2594:sonar \
-            -Dsonar.projectKey=mukul123416_notification-service \
+            -Dsonar.projectKey=mukul123416_ecommerce-microservice-notification
             -Dsonar.organization=mukul123416 \
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.login=${{ secrets.SONAR_TOKEN }}
@@ -148,7 +148,7 @@ jobs:
         run: |
           cd ServiceRegistry
           mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.10.0.2594:sonar \
-            -Dsonar.projectKey=mukul123416_service-registry \
+            -Dsonar.projectKey=mukul123416_ecommerce-microservice-service-registry
             -Dsonar.organization=mukul123416 \
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.login=${{ secrets.SONAR_TOKEN }}
