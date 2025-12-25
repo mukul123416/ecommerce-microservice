@@ -5,49 +5,150 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build-and-test:
+  build-test-sonar:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Set up Java
+      - name: Set up Java 17
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Product Service
-        run: cd ProductService && mvn clean test
+      # ===================== Product Service =====================
+      - name: Build & Test - Product Service
+        run: |
+          cd ProductService
+          mvn clean test
 
-      - name: Order Service
-        run: cd OrderService && mvn clean test
+      - name: Sonar - Product Service
+        run: |
+          cd ProductService
+          mvn sonar:sonar \
+            -Dsonar.projectKey=mukul123416_ProductService \
+            -Dsonar.organization=mukul123416 \
+            -Dsonar.host.url=https://sonarcloud.io \
+            -Dsonar.login=${{ secrets.SONAR_TOKEN }}
 
-      - name: Payment Service
-        run: cd PaymentService && mvn clean test
+      # ===================== Order Service =====================
+      - name: Build & Test - Order Service
+        run: |
+          cd OrderService
+          mvn clean test
 
-      - name: User Service
-        run: cd UserService && mvn clean test
+      - name: Sonar - Order Service
+        run: |
+          cd OrderService
+          mvn sonar:sonar \
+            -Dsonar.projectKey=mukul123416_OrderService \
+            -Dsonar.organization=mukul123416 \
+            -Dsonar.host.url=https://sonarcloud.io \
+            -Dsonar.login=${{ secrets.SONAR_TOKEN }}
 
-      - name: Inventory Service
-        run: cd InventoryService && mvn clean test
+      # ===================== Payment Service =====================
+      - name: Build & Test - Payment Service
+        run: |
+          cd PaymentService
+          mvn clean test
 
-      - name: API Gateway
-        run: cd ApiGatewayService && mvn clean test
+      - name: Sonar - Payment Service
+        run: |
+          cd PaymentService
+          mvn sonar:sonar \
+            -Dsonar.projectKey=mukul123416_PaymentService \
+            -Dsonar.organization=mukul123416 \
+            -Dsonar.host.url=https://sonarcloud.io \
+            -Dsonar.login=${{ secrets.SONAR_TOKEN }}
 
-      - name: Config Server
-        run: cd ConfigServer && mvn clean test
+      # ===================== User Service =====================
+      - name: Build & Test - User Service
+        run: |
+          cd UserService
+          mvn clean test
 
-      - name: Notification Service
-        run: cd NotificationService && mvn clean test
+      - name: Sonar - User Service
+        run: |
+          cd UserService
+          mvn sonar:sonar \
+            -Dsonar.projectKey=mukul123416_UserService \
+            -Dsonar.organization=mukul123416 \
+            -Dsonar.host.url=https://sonarcloud.io \
+            -Dsonar.login=${{ secrets.SONAR_TOKEN }}
 
-      - name: Service Registry
-        run: cd ServiceRegistry && mvn clean test
+      # ===================== Inventory Service =====================
+      - name: Build & Test - Inventory Service
+        run: |
+          cd InventoryService
+          mvn clean test
 
-      - name: SonarCloud Scan
-        run: mvn sonar:sonar \
-          -Dsonar.projectKey=mukul123416_ecommerce-microservice \
-          -Dsonar.organization=mukul123416 \
-          -Dsonar.host.url=https://sonarcloud.io \
-          -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+      - name: Sonar - Inventory Service
+        run: |
+          cd InventoryService
+          mvn sonar:sonar \
+            -Dsonar.projectKey=mukul123416_InventoryService \
+            -Dsonar.organization=mukul123416 \
+            -Dsonar.host.url=https://sonarcloud.io \
+            -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+
+      # ===================== API Gateway =====================
+      - name: Build & Test - API Gateway
+        run: |
+          cd ApiGatewayService
+          mvn clean test
+
+      - name: Sonar - API Gateway
+        run: |
+          cd ApiGatewayService
+          mvn sonar:sonar \
+            -Dsonar.projectKey=mukul123416_ApiGatewayService \
+            -Dsonar.organization=mukul123416 \
+            -Dsonar.host.url=https://sonarcloud.io \
+            -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+
+      # ===================== Config Server =====================
+      - name: Build & Test - Config Server
+        run: |
+          cd ConfigServer
+          mvn clean test
+
+      - name: Sonar - Config Server
+        run: |
+          cd ConfigServer
+          mvn sonar:sonar \
+            -Dsonar.projectKey=mukul123416_ConfigServer \
+            -Dsonar.organization=mukul123416 \
+            -Dsonar.host.url=https://sonarcloud.io \
+            -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+
+      # ===================== Notification Service =====================
+      - name: Build & Test - Notification Service
+        run: |
+          cd NotificationService
+          mvn clean test
+
+      - name: Sonar - Notification Service
+        run: |
+          cd NotificationService
+          mvn sonar:sonar \
+            -Dsonar.projectKey=mukul123416_NotificationService \
+            -Dsonar.organization=mukul123416 \
+            -Dsonar.host.url=https://sonarcloud.io \
+            -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+
+      # ===================== Service Registry =====================
+      - name: Build & Test - Service Registry
+        run: |
+          cd ServiceRegistry
+          mvn clean test
+
+      - name: Sonar - Service Registry
+        run: |
+          cd ServiceRegistry
+          mvn sonar:sonar \
+            -Dsonar.projectKey=mukul123416_ServiceRegistry \
+            -Dsonar.organization=mukul123416 \
+            -Dsonar.host.url=https://sonarcloud.io \
+            -Dsonar.login=${{ secrets.SONAR_TOKEN }}
