@@ -46,9 +46,8 @@ jobs:
         run: cd ServiceRegistry && mvn clean test
 
       - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@v2
-        with:
-          projectKey: mukul123416_ecommerce-microservice
-          organization: mukul123416
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: mvn sonar:sonar \
+          -Dsonar.projectKey=mukul123416_ecommerce-microservice \
+          -Dsonar.organization=mukul123416 \
+          -Dsonar.host.url=https://sonarcloud.io \
+          -Dsonar.login=${{ secrets.SONAR_TOKEN }}
