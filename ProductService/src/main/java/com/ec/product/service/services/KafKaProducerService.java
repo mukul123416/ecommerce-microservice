@@ -3,7 +3,6 @@ package com.ec.product.service.services;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.Message;
@@ -18,22 +17,22 @@ public class KafKaProducerService {
     private static final Logger logger =
             LoggerFactory.getLogger(KafKaProducerService.class);
 
-    private NewTopic topic;
-    @Autowired
-    private KafkaTemplate<String, String> kafkaTemplate;
+    private final NewTopic topic;
+
+    private final KafkaTemplate<String, String> kafkaTemplate;
 
     public KafKaProducerService(NewTopic topic, KafkaTemplate<String, String> kafkaTemplate) {
         this.topic = topic;
         this.kafkaTemplate = kafkaTemplate;
     }
 
-    public void sendMessage(String event) throws ExecutionException, InterruptedException {
-        logger.info(String.format("Sending event => %s", event.toString()));
+    public void sendMessage(String event) {
+        logger.info("Sending event => {}", event);
         // create Message
         Message<String> message = MessageBuilder
                 .withPayload(event)
-                .setHeader(KafkaHeaders.TOPIC, topic.name())
+                .setHeader(KafkaHeaders.TOPIC, this.topic.name())
                 .build();
-        kafkaTemplate.send(message);
+        this.kafkaTemplate.send(message);
     }
 }

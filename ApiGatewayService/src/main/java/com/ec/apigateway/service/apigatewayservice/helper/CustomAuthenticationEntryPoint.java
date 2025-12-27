@@ -1,9 +1,8 @@
-package com.ec.apigateway.service.ApiGatewayService.helper;
+package com.ec.apigateway.service.apigatewayservice.helper;
 
-import com.ec.apigateway.service.ApiGatewayService.payloads.ErrorResponse;
+import com.ec.apigateway.service.apigatewayservice.payloads.ErrorResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -19,8 +18,11 @@ import java.util.Map;
 @Component
 public class CustomAuthenticationEntryPoint implements ServerAuthenticationEntryPoint {
 
-    @Autowired
-    private ErrorResponse errorResponseUtility;
+    private final ErrorResponse errorResponseUtility;
+
+    public CustomAuthenticationEntryPoint(ErrorResponse errorResponseUtility) {
+        this.errorResponseUtility = errorResponseUtility;
+    }
 
     @Override
     public Mono<Void> commence(ServerWebExchange exchange, AuthenticationException ex) {
@@ -29,7 +31,7 @@ public class CustomAuthenticationEntryPoint implements ServerAuthenticationEntry
         response.setStatusCode(HttpStatus.UNAUTHORIZED);
         response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
 
-        Map<String, Object> map = errorResponseUtility.responseHandler(
+        Map<String, Object> map = this.errorResponseUtility.responseHandler(
                 "Access Denied: You are not authenticated. Please add token.",
                 HttpStatus.UNAUTHORIZED
         );

@@ -56,7 +56,6 @@ class ProductControllerTest {
 
     @Test
     void testGetAllProduct() {
-        List<Product> products = Arrays.asList(product);
         when(productService.getAllProducts()).thenReturn(response("Fetched Successful"));
 
         ResponseEntity<?> response = productController.getAll();

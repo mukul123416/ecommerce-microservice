@@ -61,7 +61,6 @@ class BalanceControllerTest {
     // ============================
     @Test
     void testGetAllBalance() {
-        List<UserBalance> balances = Arrays.asList(userBalance);
         when(balanceService.getAllBalance())
                 .thenReturn(response("Fetched Successful"));
 

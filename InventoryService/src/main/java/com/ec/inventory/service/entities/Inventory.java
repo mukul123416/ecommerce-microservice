@@ -26,7 +26,7 @@ public class Inventory {
     @Schema(
             description = "Unique inventory identifier",
             example = "301",
-            required = true,
+            requiredMode = Schema.RequiredMode.REQUIRED,
             accessMode = Schema.AccessMode.READ_ONLY
     )
     private Long id;

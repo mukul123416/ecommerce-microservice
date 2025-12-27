@@ -1,11 +1,10 @@
-package com.ec.apigateway.service.ApiGatewayService.controllers;
-import com.ec.apigateway.service.ApiGatewayService.helper.AuthResponse;
-import com.ec.apigateway.service.ApiGatewayService.payloads.ErrorResponse;
+package com.ec.apigateway.service.apigatewayservice.controllers;
+import com.ec.apigateway.service.apigatewayservice.helper.AuthResponse;
+import com.ec.apigateway.service.apigatewayservice.payloads.ErrorResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
@@ -19,45 +18,51 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
 
-    @Autowired
-    private ErrorResponse errorResponse;
+    private final ErrorResponse errorResponse;
+
+    public AuthController(ErrorResponse errorResponse) {
+        this.errorResponse = errorResponse;
+    }
 
     @Operation(
             summary = "Generate token",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Success",  content = @Content(
+                    @ApiResponse(responseCode = "200", description = "Success", content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(example = "{\n" +
-                                    "  \"userId\": \"gopiha9199@mekuron.com\",\n" +
-                                    "  \"accessToken\": \"eyJraWQi...\",\n" +
-                                    "  \"refreshToken\": \"c9T5K32...\",\n" +
-                                    "  \"expireAt\": 1766230172,\n" +
-                                    "  \"authorities\": [\n" +
-                                    "    \"OIDC_USER\",\n" +
-                                    "    \"ROLE_ADMIN\",\n" +
-                                    "    \"ROLE_EVERYONE\",\n" +
-                                    "    \"SCOPE_email\"\n" +
-                                    "  ]\n" +
-                                    "}")
+                            schema = @Schema(example = """
+                                    {
+                                      "userId": "gopiha9199@mekuron.com",
+                                      "accessToken": "eyJraWQi...",
+                                      "refreshToken": "c9T5K32...",
+                                      "expireAt": 1766230172,
+                                      "authorities": [
+                                        "OIDC_USER",
+                                        "ROLE_ADMIN",
+                                        "ROLE_EVERYONE",
+                                        "SCOPE_email"
+                                      ]
+                                    }
+                                    """)
                     )),
-                    @ApiResponse(responseCode = "400", description = "Bad Request",content = @Content(
+                    @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(example = "{\n" +
-                                    "  \"message\": \"{$error_message}\",\n" +
-                                    "  \"error\": true,\n" +
-                                    "  \"status\": 400\n" +
-                                    "}")
+                            schema = @Schema(example = """
+                                    {
+                                      "message": "{$error_message}",
+                                      "error": true,
+                                      "status": 400
+                                    }
+                                    """)
                     ))
             }
     )
     @GetMapping("/login")
-    public ResponseEntity<?> login(
+    public ResponseEntity<Object> login(
             @RegisteredOAuth2AuthorizedClient("okta") OAuth2AuthorizedClient client,
             @AuthenticationPrincipal OidcUser user,
             Model model
@@ -77,13 +82,13 @@ public class AuthController {
 
             List<String> authorities = user.getAuthorities().stream()
                     .map(GrantedAuthority::getAuthority)
-                    .collect(Collectors.toList());
+                    .toList();
 
             authResponse.setAuthorities(authorities);
 
             return new ResponseEntity<>(authResponse, HttpStatus.OK);
         } catch (Exception ex) {
-            Map<String, Object> map = errorResponse.responseHandler(ex.getMessage(), HttpStatus.BAD_REQUEST);
+            Map<String, Object> map = this.errorResponse.responseHandler(ex.getMessage(), HttpStatus.BAD_REQUEST);
             return new ResponseEntity<>(map,HttpStatus.BAD_REQUEST);
         }
 

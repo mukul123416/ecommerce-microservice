@@ -7,11 +7,11 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 
 public interface ProductService {
-    public ResponseEntity<?> addProduct(Product product);
-    public ResponseEntity<?> getProductById(Long id) throws ResourceNotFoundException;
-    public ResponseEntity<?> getAllProducts();
-    public ResponseEntity<?> updateProduct(Long id, Product updatedProduct) throws ResourceNotFoundException;
-    public ResponseEntity<?> deleteProduct(Long id) throws ResourceNotFoundException;
+    public ResponseEntity<Object> addProduct(Product product);
+    public ResponseEntity<Object> getProductById(Long id) throws ResourceNotFoundException;
+    public ResponseEntity<Object> getAllProducts();
+    public ResponseEntity<Object> updateProduct(Long id, Product updatedProduct) throws ResourceNotFoundException;
+    public ResponseEntity<Object> deleteProduct(Long id) throws ResourceNotFoundException;
 
     // Batch fetch
     public List<Product> getProductsByIds(List<Long> ids);

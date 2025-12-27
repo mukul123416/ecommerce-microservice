@@ -5,7 +5,7 @@ import com.ec.inventory.service.exceptions.customexceptions.ResourceNotFoundExce
 import com.ec.inventory.service.payloads.ErrorResponse;
 import com.ec.inventory.service.payloads.SuccessResponse;
 import com.ec.inventory.service.repo.InventoryRepository;
-import com.ec.inventory.service.services.Impl.InventoryServiceImplementation;
+import com.ec.inventory.service.services.impl.InventoryServiceImplementation;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -24,7 +24,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class InventoryServiceTest {
+class InventoryServiceTest {
     @Mock
     private InventoryRepository inventoryRepo;
 

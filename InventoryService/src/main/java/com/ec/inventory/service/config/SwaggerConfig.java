@@ -33,13 +33,5 @@ public class SwaggerConfig {
                         new Server().url("http://localhost:8085").description("Local Server"),
                         new Server().url("https://api.ecommercestore.com").description("Production Server")
                 ));
-//                .addSecurityItem(new SecurityRequirement().addList("Bearer Authentication"))
-//                .components(new Components()
-//                        .addSecuritySchemes("Bearer Authentication",
-//                                new SecurityScheme()
-//                                        .type(SecurityScheme.Type.HTTP)
-//                                        .scheme("bearer")
-//                                        .bearerFormat("JWT"))
-//                );
     }
 }

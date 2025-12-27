@@ -1,4 +1,4 @@
-package com.ec.apigateway.service.ApiGatewayService.config;
+package com.ec.apigateway.service.apigatewayservice.config;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;

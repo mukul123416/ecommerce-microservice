@@ -7,7 +7,6 @@ import com.ec.notification.service.payloads.OrderValidateStatusDetails;
 import com.ec.notification.service.payloads.PaymentStatusDetails;
 import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
@@ -20,23 +19,26 @@ public class KafKaConsumerService {
 
     private final Gson gson = new Gson();
 
-    @Autowired
-    private EmailService emailService;
-    @Autowired
-    private UserClient userClient;
+    private final EmailService emailService;
+    private final UserClient userClient;
+
+    public KafKaConsumerService(EmailService emailService, UserClient userClient) {
+        this.emailService = emailService;
+        this.userClient = userClient;
+    }
 
     @KafkaListener(topics = "payment-success",groupId = "${spring.kafka.consumer.group-id}")
     public void paymentSuccessConsume(String event) {
         log.info("Payment success event received: {}", event);
         try {
-            PaymentStatusDetails dto = gson.fromJson(event, PaymentStatusDetails.class);
+            PaymentStatusDetails dto = this.gson.fromJson(event, PaymentStatusDetails.class);
             UserDTO userDTO = getUserDetails(dto.getUserId());
 
             if (userDTO != null) {
                 String subject = "Payment Confirmed for Order #" + dto.getOrderId();
                 String message = buildPaymentSuccessEmail(userDTO, dto);
 
-                emailService.sendEmail(subject, message, userDTO.getEmail());
+                this.emailService.sendEmail(subject, message, userDTO.getEmail());
                 log.info("Payment success email sent to {}", userDTO.getEmail());
             }
         } catch (Exception e) {
@@ -48,14 +50,14 @@ public class KafKaConsumerService {
     public void paymentFailedConsume(String event) {
         log.error("Payment failure notification trigger: {}", event);
         try {
-            PaymentStatusDetails dto = gson.fromJson(event, PaymentStatusDetails.class);
+            PaymentStatusDetails dto = this.gson.fromJson(event, PaymentStatusDetails.class);
             UserDTO userDTO = getUserDetails(dto.getUserId());
 
             if (userDTO != null) {
                 String subject = "Action Required: Payment Failed for Order #" + dto.getOrderId();
                 String message = buildPaymentFailedEmail(userDTO, dto);
 
-                emailService.sendEmail(subject, message, userDTO.getEmail());
+                this.emailService.sendEmail(subject, message, userDTO.getEmail());
                 log.info("Payment failure email sent to {}", userDTO.getEmail());
             }
         } catch (Exception e) {
@@ -68,7 +70,7 @@ public class KafKaConsumerService {
         String retryPaymentUrl = "https://yourstore.com/checkout/" + dto.getOrderId(); // Retry link
         String supportUrl = "https://yourstore.com/support";
 
-        String message = "<div style='font-family: \"Segoe UI\", Roboto, sans-serif; max-width: 600px; margin: auto; border: 1px solid #ddd; border-radius: 12px; overflow: hidden;'>"
+        return "<div style='font-family: \"Segoe UI\", Roboto, sans-serif; max-width: 600px; margin: auto; border: 1px solid #ddd; border-radius: 12px; overflow: hidden;'>"
                 + "  <div style='background: linear-gradient(135deg, #dc3545 0%, #c82333 100%); color: white; padding: 40px 20px; text-align: center;'>"
                 + "    <div style='background: rgba(255,255,255,0.2); width: 60px; height: 60px; line-height: 60px; border-radius: 50%; margin: 0 auto 15px; font-size: 30px;'>!</div>"
                 + "    <h1 style='margin: 0; font-size: 26px;'>Payment Failed</h1>"
@@ -100,14 +102,13 @@ public class KafKaConsumerService {
                 + "    <p style='margin: 0;'>Sent by <b>SCM Store</b></p>"
                 + "  </div>"
                 + "</div>";
-        return message;
     }
 
     private String buildPaymentSuccessEmail(UserDTO userDTO, PaymentStatusDetails dto) {
 
         String formattedAmount = new java.text.DecimalFormat("##,##,###.00").format(dto.getAmount());
 
-        String message = "<div style='font-family: \"Segoe UI\", Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: auto; border: 1px solid #ddd; border-radius: 10px; overflow: hidden;'>"
+        return "<div style='font-family: \"Segoe UI\", Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: auto; border: 1px solid #ddd; border-radius: 10px; overflow: hidden;'>"
                 + "  <div style='background-color: #28a745; color: white; padding: 30px; text-align: center;'>"
                 + "    <div style='font-size: 50px; margin-bottom: 10px;'>&#10004;</div>" // Large Checkmark
                 + "    <h1 style='margin: 0; font-size: 24px;'>Payment Successful!</h1>"
@@ -145,7 +146,6 @@ public class KafKaConsumerService {
                 + "    &copy; 2025 SCM Store. All rights reserved."
                 + "  </div>"
                 + "</div>";
-        return message;
     }
 
     @KafkaListener(topics = "order-validated",groupId = "${spring.kafka.consumer.group-id}")
@@ -155,7 +155,7 @@ public class KafKaConsumerService {
 
         try {
 
-        OrderValidateStatusDetails dto = gson.fromJson(event, OrderValidateStatusDetails.class);
+        OrderValidateStatusDetails dto = this.gson.fromJson(event, OrderValidateStatusDetails.class);
 
         UserDTO userDTO = getUserDetails(dto.getUserId());
 
@@ -209,7 +209,7 @@ public class KafKaConsumerService {
     private UserDTO getUserDetails(Long userId) {
         log.debug("Fetching user details from UserClient for ID: {}", userId);
         try {
-            ApiResponse<?> apiResponse = userClient.fetchUserBasic(userId);
+            ApiResponse<UserDTO> apiResponse = this.userClient.fetchUserBasic(userId);
             if (apiResponse != null && apiResponse.getData() != null) {
                 return apiResponse.getData();
             }

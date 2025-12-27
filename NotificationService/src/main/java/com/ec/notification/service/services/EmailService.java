@@ -1,5 +1,6 @@
 package com.ec.notification.service.services;
 
+import org.springframework.beans.factory.annotation.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -12,18 +13,23 @@ import java.util.Properties;
 @Service
 public class EmailService {
 
+    @Value("${spring.mail.username}")
+    private String fromEmail;
+
+    @Value("${spring.mail.password}")
+    private String appPassword;
+
     public boolean sendEmail(String subject,String message,String to){
 
         boolean f = false;
-
-        String from="ms2224850@gmail.com";
 
         log.info("Preparing to send email to: {}", to);
 
         String host="smtp.gmail.com";
 
         Properties properties = System.getProperties();
-        System.out.println("PROPERTIES "+properties);
+
+        log.info("PROPERTIES {}", properties);
 
         properties.put("mail.smtp.host", host);
         properties.put("mail.smtp.port","465");
@@ -33,7 +39,7 @@ public class EmailService {
         Session session=Session.getInstance(properties, new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication("ms2224850@gmail.com", "dyoi tusu ofwh sabp");
+                return new PasswordAuthentication(fromEmail, appPassword);
             }
 
         });
@@ -44,7 +50,7 @@ public class EmailService {
 
         try {
 
-            m.setFrom(from);
+            m.setFrom(fromEmail);
 
             m.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
 

@@ -1,7 +1,6 @@
 package com.ec.user.service.entities;
 
 import com.ec.user.service.dtos.OrderDTO;
-import com.ec.user.service.dtos.PaymentDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -27,7 +26,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Schema(description = "Unique user identifier", example = "101", required = true, accessMode = Schema.AccessMode.READ_ONLY)
+    @Schema(description = "Unique user identifier", example = "101", requiredMode = Schema.RequiredMode.REQUIRED, accessMode = Schema.AccessMode.READ_ONLY)
     private Long id;
 
     @NotNull(message = "Name cannot be null")
@@ -38,19 +37,19 @@ public class User {
 
     @NotNull(message = "About cannot be null")
     @Size(min = 3, max = 30, message = "About must be between 3 and 30 characters")
-    @Schema(description = "About for the user", required = true)
+    @Schema(description = "About for the user", requiredMode = Schema.RequiredMode.REQUIRED)
     @Column(nullable = false)
     private String about;
 
     @NotNull(message = "Email cannot be null")
     @Column(unique = true,nullable = false)
-    @Schema(description = "User's email address", example = "mukul@example.com", format = "email", required = true)
+    @Schema(description = "User's email address", example = "mukul@example.com", format = "email", requiredMode = Schema.RequiredMode.REQUIRED)
     private String email;
 
     @Column(nullable = false)
     @NotNull(message = "Password cannot be null")
     @Size(min = 6, message = "Password must be at least 6 characters")
-    @Schema(description = "User password (write only)", required = true, accessMode = Schema.AccessMode.WRITE_ONLY, example = "P@ssw0rd")
+    @Schema(description = "User password (write only)", requiredMode = Schema.RequiredMode.REQUIRED, accessMode = Schema.AccessMode.WRITE_ONLY, example = "P@ssw0rd")
     private String password;
 
     @Transient

@@ -56,7 +56,6 @@ class PaymentControllerTest {
 
     @Test
     void testGetAllPayment() {
-        List<Payment> paymentList = Arrays.asList(payment);
         when(paymentService.getAllPayment()).thenReturn(response("Fetched Successful"));
 
         ResponseEntity<?> response = paymentController.getAll();

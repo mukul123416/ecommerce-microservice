@@ -24,7 +24,7 @@ public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Schema(description = "Unique product identifier", example = "101", required = true, accessMode = Schema.AccessMode.READ_ONLY)
+    @Schema(description = "Unique product identifier", example = "101", requiredMode = Schema.RequiredMode.REQUIRED, accessMode = Schema.AccessMode.READ_ONLY)
     private Long id;
 
     @Positive(message = "Price must be greater than zero")
@@ -39,7 +39,7 @@ public class Product {
 
     @NotNull(message = "Description cannot be null")
     @Size(min = 3, max = 80, message = "Description must be between 3 and 80 characters")
-    @Schema(description = "Description for the product", required = true)
+    @Schema(description = "Description for the product", requiredMode = Schema.RequiredMode.REQUIRED)
     @Column(nullable = false)
     private String description;
 

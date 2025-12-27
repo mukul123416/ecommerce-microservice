@@ -4,9 +4,6 @@ import com.ec.product.service.exceptions.customexceptions.ResourceNotFoundExcept
 import com.ec.product.service.payloads.PlaceOrderDetails;
 import com.ec.product.service.repo.ProductRepository;
 import com.google.gson.Gson;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import java.util.concurrent.ExecutionException;
@@ -14,14 +11,14 @@ import java.util.concurrent.ExecutionException;
 @Service
 public class KafKaConsumerService {
 
-    private static final Logger logger =
-            LoggerFactory.getLogger(KafKaConsumerService.class);
+    private final ProductRepository productRepository;
 
-    @Autowired
-    private ProductRepository productRepository;
+    private final KafKaProducerService kafKaProducerService;
 
-    @Autowired
-    private KafKaProducerService kafKaProducerService;
+    public KafKaConsumerService(ProductRepository productRepository, KafKaProducerService kafKaProducerService) {
+        this.productRepository = productRepository;
+        this.kafKaProducerService = kafKaProducerService;
+    }
 
     @KafkaListener(topics = "order-created",groupId = "${spring.kafka.consumer.group-id}")
     public void consume(String event) throws ResourceNotFoundException, ExecutionException, InterruptedException {
@@ -30,7 +27,7 @@ public class KafKaConsumerService {
         placeOrderDetails=gson.fromJson(event, PlaceOrderDetails.class);
         Long id = placeOrderDetails.getProductId();
 
-        Product product = productRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Product not found with id : "+id));
+        Product product = this.productRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Product not found with id : "+id));
 
         String jsonRequestString = "{"
                 + "\"userId\" : \"" + placeOrderDetails.getUserId() + "\" , "

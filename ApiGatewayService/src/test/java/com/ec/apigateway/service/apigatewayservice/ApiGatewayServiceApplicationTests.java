@@ -1,4 +1,4 @@
-package com.ec.apigateway.service.ApiGatewayService;
+package com.ec.apigateway.service.apigatewayservice;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;

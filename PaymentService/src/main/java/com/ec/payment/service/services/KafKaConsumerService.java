@@ -5,7 +5,6 @@ import com.ec.payment.service.payloads.OrderValidateStatusDetails;
 import com.ec.payment.service.repo.BalanceRepository;
 import com.google.gson.Gson;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
@@ -13,11 +12,15 @@ import java.util.concurrent.ExecutionException;
 
 @Service
 public class KafKaConsumerService {
-    @Autowired
-    private KafKaProducerService kafKaProducerService;
 
-    @Autowired
-    private BalanceRepository balanceRepository;
+    private final KafKaProducerService kafKaProducerService;
+
+    private final BalanceRepository balanceRepository;
+
+    public KafKaConsumerService(KafKaProducerService kafKaProducerService, BalanceRepository balanceRepository) {
+        this.kafKaProducerService = kafKaProducerService;
+        this.balanceRepository = balanceRepository;
+    }
 
     @Transactional
     @KafkaListener(topics = "order-validated",groupId = "${spring.kafka.consumer.group-id}")
@@ -28,7 +31,7 @@ public class KafKaConsumerService {
         orderValidateStatusDetails=gson.fromJson(event, OrderValidateStatusDetails.class);
         double amount = Math.round((orderValidateStatusDetails.getPrice() * orderValidateStatusDetails.getQuantity()) * 100.0) / 100.0;
 
-        UserBalance wallet = balanceRepository.findById(orderValidateStatusDetails.getUserId())
+        UserBalance wallet = this.balanceRepository.findById(orderValidateStatusDetails.getUserId())
                 .orElse(new UserBalance(orderValidateStatusDetails.getUserId(), 0.0));
 
         if (amount <= 0) {

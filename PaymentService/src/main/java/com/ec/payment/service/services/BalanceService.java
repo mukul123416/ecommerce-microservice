@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 
 public interface BalanceService {
 
-    public ResponseEntity<?> addBalance(UserBalance userBalance);
-    public ResponseEntity<?> getBalanceById(Long id) throws ResourceNotFoundException;
-    public ResponseEntity<?> getAllBalance();
+    public ResponseEntity<Object> addBalance(UserBalance userBalance);
+    public ResponseEntity<Object> getBalanceById(Long id) throws ResourceNotFoundException;
+    public ResponseEntity<Object> getAllBalance();
 }

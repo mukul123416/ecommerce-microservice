@@ -30,7 +30,7 @@ public class Order {
     @Schema(
             description = "Unique order identifier",
             example = "501",
-            required = true,
+            requiredMode = Schema.RequiredMode.REQUIRED,
             accessMode = Schema.AccessMode.READ_ONLY
     )
     private Long id;
@@ -64,7 +64,7 @@ public class Order {
 
     @NotNull(message = "Status cannot be null")
     @Size(min = 3, max = 30, message = "Status must be between 3 and 30 characters")
-    @Schema(description = "Status for the order", required = true)
+    @Schema(description = "Status for the order", requiredMode = Schema.RequiredMode.REQUIRED)
     @Column(nullable = false)
     private String status;
 

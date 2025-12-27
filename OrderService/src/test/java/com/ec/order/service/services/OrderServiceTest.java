@@ -7,7 +7,7 @@ import com.ec.order.service.exceptions.customexceptions.ResourceNotFoundExceptio
 import com.ec.order.service.payloads.ErrorResponse;
 import com.ec.order.service.payloads.SuccessResponse;
 import com.ec.order.service.repo.OrderRepository;
-import com.ec.order.service.services.Impl.OrderServiceImplementation;
+import com.ec.order.service.services.impl.OrderServiceImplementation;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -28,7 +28,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class OrderServiceTest {
+class OrderServiceTest {
     @Mock
     private OrderRepository orderRepo;
 

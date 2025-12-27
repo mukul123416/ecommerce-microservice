@@ -5,7 +5,7 @@ import com.ec.product.service.exceptions.customexceptions.ResourceNotFoundExcept
 import com.ec.product.service.payloads.ErrorResponse;
 import com.ec.product.service.payloads.SuccessResponse;
 import com.ec.product.service.repo.ProductRepository;
-import com.ec.product.service.services.Impl.ProductServiceImplementation;
+import com.ec.product.service.services.impl.ProductServiceImplementation;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -24,7 +24,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class ProductServiceTest {
+class ProductServiceTest {
     @Mock
     private ProductRepository productRepo;
 

@@ -9,12 +9,12 @@ import org.springframework.kafka.config.TopicBuilder;
 public class KafkaTopicConfig {
 
     @Bean
-    public NewTopic OrderValidated(){
+    public NewTopic orderValidated(){
         return TopicBuilder.name("order-validated")
                 .build();
     }
     @Bean
-    public NewTopic OrderRejected(){
+    public NewTopic orderRejected(){
         return TopicBuilder.name("order-rejected")
                 .build();
     }

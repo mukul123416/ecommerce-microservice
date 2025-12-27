@@ -5,7 +5,7 @@ import com.ec.payment.service.exceptions.customexceptions.ResourceNotFoundExcept
 import com.ec.payment.service.payloads.ErrorResponse;
 import com.ec.payment.service.payloads.SuccessResponse;
 import com.ec.payment.service.repo.BalanceRepository;
-import com.ec.payment.service.services.Impl.BalanceServiceImplementation;
+import com.ec.payment.service.services.impl.BalanceServiceImplementation;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -22,7 +22,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class BalanceServiceTest {
+class BalanceServiceTest {
 
     @Mock
     private BalanceRepository balanceRepository;

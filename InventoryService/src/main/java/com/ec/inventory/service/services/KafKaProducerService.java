@@ -3,7 +3,6 @@ package com.ec.inventory.service.services;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.KafkaHeaders;
@@ -19,33 +18,27 @@ public class KafKaProducerService {
     private static final Logger logger =
             LoggerFactory.getLogger(KafKaProducerService.class);
 
-    @Autowired
-    @Qualifier("OrderValidated")
-    private NewTopic validatedTopic;
-
-    @Autowired
-    @Qualifier("OrderRejected")
-    private NewTopic rejectedTopic;
-    @Autowired
-    private KafkaTemplate<String, String> kafkaTemplate;
+    private final NewTopic validatedTopic;
+    private final NewTopic rejectedTopic;
+    private final KafkaTemplate<String, String> kafkaTemplate;
 
     public KafKaProducerService(
-            @Qualifier("OrderValidated") NewTopic validatedTopic,
-            @Qualifier("OrderRejected") NewTopic rejectedTopic,
+            @Qualifier("orderValidated") NewTopic validatedTopic,
+            @Qualifier("orderRejected") NewTopic rejectedTopic,
             KafkaTemplate<String, String> kafkaTemplate) {
         this.validatedTopic = validatedTopic;
         this.rejectedTopic = rejectedTopic;
         this.kafkaTemplate = kafkaTemplate;
     }
 
-    public void sendMessage(String event,String status) throws ExecutionException, InterruptedException {
+    public void sendMessage(String event,String status) {
         String targetTopic;
         if ("validated".equalsIgnoreCase(status)) {
             targetTopic = validatedTopic.name();
         } else {
             targetTopic = rejectedTopic.name();
         }
-        logger.info(String.format("Sending event => %s", event.toString()));
+        logger.info("Sending event to topic {}: {}", targetTopic, event);
         // create Message
         Message<String> message = MessageBuilder
                 .withPayload(event)

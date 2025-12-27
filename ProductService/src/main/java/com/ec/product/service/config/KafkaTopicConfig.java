@@ -9,7 +9,7 @@ import org.springframework.kafka.config.TopicBuilder;
 public class KafkaTopicConfig {
 
     @Bean
-    public NewTopic OrderPriceCal(){
+    public NewTopic orderPriceCal(){
         return TopicBuilder.name("order-price-calculated")
                 .build();
     }

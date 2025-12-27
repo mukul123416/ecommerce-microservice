@@ -56,7 +56,6 @@ class OrderControllerTest {
 
     @Test
     void testGetAllOrder() {
-        List<Order> orders = Arrays.asList(order);
         when(orderService.getAllOrders()).thenReturn(response("Fetched Successful"));
 
         ResponseEntity<?> response = orderController.getAll();

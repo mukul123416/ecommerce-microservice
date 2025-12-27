@@ -1,4 +1,4 @@
-package com.ec.apigateway.service.ApiGatewayService.helper;
+package com.ec.apigateway.service.apigatewayservice.helper;
 import lombok.*;
 
 import java.util.Collection;

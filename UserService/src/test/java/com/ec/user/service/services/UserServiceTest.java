@@ -9,7 +9,7 @@ import com.ec.user.service.payloads.ErrorResponse;
 import com.ec.user.service.payloads.Order;
 import com.ec.user.service.payloads.SuccessResponse;
 import com.ec.user.service.repo.UserRepository;
-import com.ec.user.service.services.Impl.UserServiceImplementation;
+import com.ec.user.service.services.impl.UserServiceImplementation;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -30,7 +30,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class UserServiceTest {
+class UserServiceTest {
     @Mock
     private UserRepository userRepo;
 

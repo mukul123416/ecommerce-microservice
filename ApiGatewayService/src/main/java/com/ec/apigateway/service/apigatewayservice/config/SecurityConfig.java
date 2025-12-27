@@ -1,7 +1,6 @@
-package com.ec.apigateway.service.ApiGatewayService.config;
+package com.ec.apigateway.service.apigatewayservice.config;
 
-import com.ec.apigateway.service.ApiGatewayService.helper.CustomAuthenticationEntryPoint;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.ec.apigateway.service.apigatewayservice.helper.CustomAuthenticationEntryPoint;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
@@ -29,8 +28,11 @@ import org.springframework.core.convert.converter.Converter;
 @EnableWebFluxSecurity
 public class SecurityConfig {
 
-    @Autowired
-    private CustomAuthenticationEntryPoint customEntryPoint;
+    private final CustomAuthenticationEntryPoint customEntryPoint;
+
+    public SecurityConfig(CustomAuthenticationEntryPoint customEntryPoint) {
+        this.customEntryPoint = customEntryPoint;
+    }
 
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity httpSecurity) {
@@ -73,7 +75,7 @@ public class SecurityConfig {
                         .anyExchange().authenticated()
                 )
                 .exceptionHandling(exceptionHandling ->
-                        exceptionHandling.authenticationEntryPoint(customEntryPoint)
+                        exceptionHandling.authenticationEntryPoint(this.customEntryPoint)
                 )
                 // 🌐 Browser login (OIDC)
                 .oauth2Login(oauth2 ->

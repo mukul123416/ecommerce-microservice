@@ -15,5 +15,5 @@ public interface OrderService {
     @GetMapping("/orders")
     ApiResponse<List<OrderWithUserIdDTO>> getAll();
     @PostMapping("/orders")
-    ApiResponse<?> placeOrder(@RequestBody Order order);
+    ApiResponse<Object> placeOrder(@RequestBody Order order);
 }

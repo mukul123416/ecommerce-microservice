@@ -3,12 +3,11 @@ package com.ec.user.service.config;
 import com.ec.user.service.config.interceptor.RestTemplateInterceptor;
 import com.ec.user.service.exceptions.customexceptions.CustomAccessDeniedHandler;
 import com.ec.user.service.exceptions.customexceptions.CustomAuthenticationEntryPoint;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -31,21 +30,29 @@ import org.springframework.security.oauth2.client.web.DefaultOAuth2AuthorizedCli
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true) //This annotation apply security in methods(i.e,hasROLE)
+@EnableMethodSecurity //This annotation apply security in methods(i.e,hasROLE)
 public class SecurityConfig {
+
+    private final ClientRegistrationRepository clientRegistrationRepository;
+    private final OAuth2AuthorizedClientRepository oAuth2AuthorizedClientRepository;
+    private final CustomAuthenticationEntryPoint customEntryPoint;
+    private final CustomAccessDeniedHandler customAccessDeniedHandler;
+
+    public SecurityConfig(
+            ClientRegistrationRepository clientRegistrationRepository,
+            OAuth2AuthorizedClientRepository oAuth2AuthorizedClientRepository,
+            CustomAuthenticationEntryPoint customEntryPoint,
+            CustomAccessDeniedHandler customAccessDeniedHandler) {
+        this.clientRegistrationRepository = clientRegistrationRepository;
+        this.oAuth2AuthorizedClientRepository = oAuth2AuthorizedClientRepository;
+        this.customEntryPoint = customEntryPoint;
+        this.customAccessDeniedHandler = customAccessDeniedHandler;
+    }
+
     @Bean
     public PasswordEncoder passwordEncoder () {
         return new BCryptPasswordEncoder();
     }
-
-    @Autowired
-    private  ClientRegistrationRepository clientRegistrationRepository;
-    @Autowired
-    private  OAuth2AuthorizedClientRepository oAuth2AuthorizedClientRepository;
-    @Autowired
-    private CustomAuthenticationEntryPoint customEntryPoint;
-    @Autowired
-    private CustomAccessDeniedHandler customAccessDeniedHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -63,8 +70,8 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(exceptionHandling -> exceptionHandling
-                        .authenticationEntryPoint(customEntryPoint)
-                        .accessDeniedHandler(customAccessDeniedHandler)
+                        .authenticationEntryPoint(this.customEntryPoint)
+                        .accessDeniedHandler(this.customAccessDeniedHandler)
                 )
                 .oauth2ResourceServer(oauth2 ->
                         oauth2.jwt(jwt ->
@@ -86,8 +93,8 @@ public class SecurityConfig {
         List<ClientHttpRequestInterceptor> interceptors=new ArrayList<>();
 
         interceptors.add(new RestTemplateInterceptor(manager(
-                clientRegistrationRepository,
-                oAuth2AuthorizedClientRepository
+                this.clientRegistrationRepository,
+                this.oAuth2AuthorizedClientRepository
         )));
 
         restTemplate.setInterceptors(interceptors);

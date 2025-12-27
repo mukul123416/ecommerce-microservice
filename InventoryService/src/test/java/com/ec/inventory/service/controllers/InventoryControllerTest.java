@@ -54,7 +54,6 @@ class InventoryControllerTest {
 
     @Test
     void testGetAllInventory() {
-        List<Inventory> inventories = Arrays.asList(inventory);
         when(inventoryService.getAllInventory()).thenReturn(response("Fetched Successful"));
 
         ResponseEntity<?> response = inventoryController.getAll();

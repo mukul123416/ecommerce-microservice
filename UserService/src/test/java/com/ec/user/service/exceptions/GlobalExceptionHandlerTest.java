@@ -82,7 +82,7 @@ class GlobalExceptionHandlerTest {
     }
 
     @Test
-    void testHandleMissingServletRequestParameter() throws Exception {
+    void testHandleMissingServletRequestParameter() {
         MissingServletRequestParameterException ex =
                 new MissingServletRequestParameterException("name", "String");
 

@@ -6,11 +6,11 @@ import com.ec.user.service.payloads.Order;
 import org.springframework.http.ResponseEntity;
 
 public interface UserService {
-    ResponseEntity<?> placeOrder(Order order);
-    public ResponseEntity<?> createUser(User user);
-    public ResponseEntity<?> getUserById(Long id) throws ResourceNotFoundException;
-    public ResponseEntity<?> getAllUsers();
-    public ResponseEntity<?> updateUser(Long id, User updatedUser) throws ResourceNotFoundException;
-    public ResponseEntity<?> deleteUser(Long id) throws ResourceNotFoundException;
-    public ResponseEntity<?> fetchUserBasic(Long userId) throws ResourceNotFoundException;
+    ResponseEntity<Object> placeOrder(Order order);
+    public ResponseEntity<Object> createUser(User user);
+    public ResponseEntity<Object> getUserById(Long id) throws ResourceNotFoundException;
+    public ResponseEntity<Object> getAllUsers();
+    public ResponseEntity<Object> updateUser(Long id, User updatedUser) throws ResourceNotFoundException;
+    public ResponseEntity<Object> deleteUser(Long id) throws ResourceNotFoundException;
+    public ResponseEntity<Object> fetchUserBasic(Long userId) throws ResourceNotFoundException;
 }

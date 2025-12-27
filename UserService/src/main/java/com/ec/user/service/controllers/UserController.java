@@ -1,4 +1,5 @@
 package com.ec.user.service.controllers;
+
 import com.ec.user.service.entities.User;
 import com.ec.user.service.exceptions.customexceptions.ResourceNotFoundException;
 import com.ec.user.service.payloads.Order;
@@ -8,7 +9,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -16,333 +16,128 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/users")
 public class UserController {
-    @Autowired
-    private UserService userService;
+
+    private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @Operation(
             summary = "Place order",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Success",  content = @Content(
+                    @ApiResponse(responseCode = "200", description = "Success", content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(example = "{\n" +
-                                    "  \"message\": \"Order placed, processing...\",\n" +
-                                    "  \"error\": false,\n" +
-                                    "  \"status\": 200,\n" +
-                                    "  \"data\": null\n" +
-                                    "}")
+                            schema = @Schema(example = """
+                                    {
+                                      "message": "Order placed, processing...",
+                                      "error": false,
+                                      "status": 200,
+                                      "data": null
+                                    }
+                                    """)
                     )),
-                    @ApiResponse(responseCode = "400", description = "Bad Request",content = @Content(
+                    @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(example = "{\n" +
-                                    "  \"message\": \"{$error_message}\",\n" +
-                                    "  \"error\": true,\n" +
-                                    "  \"status\": 400\n" +
-                                    "}")
+                            schema = @Schema(example = """
+                                    {
+                                      "message": "{$error_message}",
+                                      "error": true,
+                                      "status": 400
+                                    }
+                                    """)
                     )),
-                    @ApiResponse(responseCode = "404", description = "Not Found",content = @Content(
+                    @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(example = "{\n" +
-                                    "  \"message\": \"{$error_message}\",\n" +
-                                    "  \"error\": true,\n" +
-                                    "  \"status\": 404\n" +
-                                    "}")
+                            schema = @Schema(example = """
+                                    {
+                                      "message": "{$error_message}",
+                                      "error": true,
+                                      "status": 404
+                                    }
+                                    """)
                     )),
-                    @ApiResponse(responseCode = "500", description = "Server Error",content = @Content(
+                    @ApiResponse(responseCode = "500", description = "Server Error", content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(example = "{\n" +
-                                    "  \"message\": \"{$error_message}\",\n" +
-                                    "  \"error\": true,\n" +
-                                    "  \"status\": 500\n" +
-                                    "}")
+                            schema = @Schema(example = """
+                                    {
+                                      "message": "{$error_message}",
+                                      "error": true,
+                                      "status": 500
+                                    }
+                                    """)
                     ))
             }
     )
     @PostMapping("/place/order")
-    public ResponseEntity<?> placeOrder(@Valid @RequestBody Order order) {
-        return userService.placeOrder(order);
+    public ResponseEntity<Object> placeOrder(@Valid @RequestBody Order order) {
+        return this.userService.placeOrder(order);
     }
 
     @Operation(
             summary = "Add user",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Success",  content = @Content(
+                    @ApiResponse(responseCode = "200", description = "Success", content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(example = "{\n" +
-                                    "  \"message\": \"User registered successfully\",\n" +
-                                    "  \"error\": false,\n" +
-                                    "  \"status\": 200,\n" +
-                                    "  \"data\": null\n" +
-                                    "}")
-                    )),
-                    @ApiResponse(responseCode = "400", description = "Bad Request",content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(example = "{\n" +
-                                    "  \"message\": \"{$error_message}\",\n" +
-                                    "  \"error\": true,\n" +
-                                    "  \"status\": 400\n" +
-                                    "}")
-                    )),
-                    @ApiResponse(responseCode = "404", description = "Not Found",content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(example = "{\n" +
-                                    "  \"message\": \"{$error_message}\",\n" +
-                                    "  \"error\": true,\n" +
-                                    "  \"status\": 404\n" +
-                                    "}")
-                    )),
-                    @ApiResponse(responseCode = "500", description = "Server Error",content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(example = "{\n" +
-                                    "  \"message\": \"{$error_message}\",\n" +
-                                    "  \"error\": true,\n" +
-                                    "  \"status\": 500\n" +
-                                    "}")
+                            schema = @Schema(example = """
+                                    {
+                                      "message": "User registered successfully",
+                                      "error": false,
+                                      "status": 200,
+                                      "data": null
+                                    }
+                                    """)
                     ))
             }
     )
     @PostMapping
-    public ResponseEntity<?> register(@Valid @RequestBody User user){
-        return userService.createUser(user);
+    public ResponseEntity<Object> register(@Valid @RequestBody User user) {
+        return this.userService.createUser(user);
     }
 
     @Operation(
             summary = "Get all user",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Success",  content = @Content(
+                    @ApiResponse(responseCode = "200", description = "Success", content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(example = "{\n" +
-                                    "  \"data\": \"{$data}\",\n" +
-                                    "  \"message\": \"Fetched Successfully\",\n" +
-                                    "  \"error\": false,\n" +
-                                    "  \"status\": 200\n" +
-                                    "}")
-                    )),
-                    @ApiResponse(responseCode = "400", description = "Bad Request",content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(example = "{\n" +
-                                    "  \"message\": \"{$error_message}\",\n" +
-                                    "  \"error\": true,\n" +
-                                    "  \"status\": 400\n" +
-                                    "}")
-                    )),
-                    @ApiResponse(responseCode = "401", description = "Unauthorized Access",content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(example = "{\n" +
-                                    "  \"message\": \"{$error_message}\",\n" +
-                                    "  \"error\": true,\n" +
-                                    "  \"status\": 401\n" +
-                                    "}")
-                    )),
-                    @ApiResponse(responseCode = "500", description = "Server Error",content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(example = "{\n" +
-                                    "  \"message\": \"{$error_message}\",\n" +
-                                    "  \"error\": true,\n" +
-                                    "  \"status\": 500\n" +
-                                    "}")
+                            schema = @Schema(example = """
+                                    {
+                                      "data": "{$data}",
+                                      "message": "Fetched Successfully",
+                                      "error": false,
+                                      "status": 200
+                                    }
+                                    """)
                     ))
             }
     )
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
-    public ResponseEntity<?> getAll() {
-        return userService.getAllUsers();
+    public ResponseEntity<Object> getAll() {
+        return this.userService.getAllUsers();
     }
 
-    @Operation(
-            summary = "Get user by ID",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Success",  content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(example = "{\n" +
-                                    "  \"data\": \"{$data}\",\n" +
-                                    "  \"message\": \"Fetched Successfully\",\n" +
-                                    "  \"error\": false,\n" +
-                                    "  \"status\": 200\n" +
-                                    "}")
-                    )),
-                    @ApiResponse(responseCode = "400", description = "Bad Request",content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(example = "{\n" +
-                                    "  \"message\": \"{$error_message}\",\n" +
-                                    "  \"error\": true,\n" +
-                                    "  \"status\": 400\n" +
-                                    "}")
-                    )),
-                    @ApiResponse(responseCode = "401", description = "Unauthorized Access",content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(example = "{\n" +
-                                    "  \"message\": \"{$error_message}\",\n" +
-                                    "  \"error\": true,\n" +
-                                    "  \"status\": 401\n" +
-                                    "}")
-                    )),
-                    @ApiResponse(responseCode = "404", description = "Not Found",content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(example = "{\n" +
-                                    "  \"message\": \"{$error_message}\",\n" +
-                                    "  \"error\": true,\n" +
-                                    "  \"status\": 404\n" +
-                                    "}")
-                    )),
-                    @ApiResponse(responseCode = "500", description = "Server Error",content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(example = "{\n" +
-                                    "  \"message\": \"{$error_message}\",\n" +
-                                    "  \"error\": true,\n" +
-                                    "  \"status\": 500\n" +
-                                    "}")
-                    ))
-            }
-    )
+    @Operation(summary = "Get user by ID")
     @GetMapping("/{id}")
-    public ResponseEntity<?> getById(@PathVariable Long id) throws ResourceNotFoundException {
-        return userService.getUserById(id);
+    public ResponseEntity<Object> getById(@PathVariable Long id) throws ResourceNotFoundException {
+        return this.userService.getUserById(id);
     }
 
-    @Operation(
-            summary = "Get user basic details by ID",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Success",  content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(example = "{\n" +
-                                    "  \"data\": \"{$data}\",\n" +
-                                    "  \"message\": \"Fetched Successfully\",\n" +
-                                    "  \"error\": false,\n" +
-                                    "  \"status\": 200\n" +
-                                    "}")
-                    )),
-                    @ApiResponse(responseCode = "400", description = "Bad Request",content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(example = "{\n" +
-                                    "  \"message\": \"{$error_message}\",\n" +
-                                    "  \"error\": true,\n" +
-                                    "  \"status\": 400\n" +
-                                    "}")
-                    )),
-                    @ApiResponse(responseCode = "401", description = "Unauthorized Access",content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(example = "{\n" +
-                                    "  \"message\": \"{$error_message}\",\n" +
-                                    "  \"error\": true,\n" +
-                                    "  \"status\": 401\n" +
-                                    "}")
-                    )),
-                    @ApiResponse(responseCode = "404", description = "Not Found",content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(example = "{\n" +
-                                    "  \"message\": \"{$error_message}\",\n" +
-                                    "  \"error\": true,\n" +
-                                    "  \"status\": 404\n" +
-                                    "}")
-                    )),
-                    @ApiResponse(responseCode = "500", description = "Server Error",content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(example = "{\n" +
-                                    "  \"message\": \"{$error_message}\",\n" +
-                                    "  \"error\": true,\n" +
-                                    "  \"status\": 500\n" +
-                                    "}")
-                    ))
-            }
-    )
+    @Operation(summary = "Get user basic details by ID")
     @GetMapping("/basic/{id}")
-    public ResponseEntity<?> fetchUserBasic(@PathVariable Long id) throws ResourceNotFoundException {
-        return userService.fetchUserBasic(id);
+    public ResponseEntity<Object> fetchUserBasic(@PathVariable Long id) throws ResourceNotFoundException {
+        return this.userService.fetchUserBasic(id);
     }
 
-    @Operation(
-            summary = "Update user by ID",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Success",  content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(example = "{\n" +
-                                    "  \"message\": \"Update Successful\",\n" +
-                                    "  \"error\": false,\n" +
-                                    "  \"status\": 200,\n" +
-                                    "  \"data\": null\n" +
-                                    "}")
-                    )),
-                    @ApiResponse(responseCode = "400", description = "Bad Request",content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(example = "{\n" +
-                                    "  \"message\": \"{$error_message}\",\n" +
-                                    "  \"error\": true,\n" +
-                                    "  \"status\": 400\n" +
-                                    "}")
-                    )),
-                    @ApiResponse(responseCode = "401", description = "Unauthorized Access",content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(example = "{\n" +
-                                    "  \"message\": \"{$error_message}\",\n" +
-                                    "  \"error\": true,\n" +
-                                    "  \"status\": 401\n" +
-                                    "}")
-                    )),
-                    @ApiResponse(responseCode = "404", description = "Not Found",content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(example = "{\n" +
-                                    "  \"message\": \"{$error_message}\",\n" +
-                                    "  \"error\": true,\n" +
-                                    "  \"status\": 404\n" +
-                                    "}")
-                    )),
-                    @ApiResponse(responseCode = "500", description = "Server Error",content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(example = "{\n" +
-                                    "  \"message\": \"{$error_message}\",\n" +
-                                    "  \"error\": true,\n" +
-                                    "  \"status\": 500\n" +
-                                    "}")
-                    ))
-            }
-    )
+    @Operation(summary = "Update user by ID")
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody User user) throws ResourceNotFoundException {
-        return userService.updateUser(id, user);
+    public ResponseEntity<Object> update(@PathVariable Long id, @RequestBody User user) throws ResourceNotFoundException {
+        return this.userService.updateUser(id, user);
     }
 
-    @Operation(
-            summary = "Delete user by ID",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Success",  content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(example = "{\n" +
-                                    "  \"message\": \"Delete Successful\",\n" +
-                                    "  \"error\": false,\n" +
-                                    "  \"status\": 200,\n" +
-                                    "  \"data\": null\n" +
-                                    "}")
-                    )),
-                    @ApiResponse(responseCode = "400", description = "Bad Request",content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(example = "{\n" +
-                                    "  \"message\": \"{$error_message}\",\n" +
-                                    "  \"error\": true,\n" +
-                                    "  \"status\": 400\n" +
-                                    "}")
-                    )),
-                    @ApiResponse(responseCode = "401", description = "Unauthorized Access",content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(example = "{\n" +
-                                    "  \"message\": \"{$error_message}\",\n" +
-                                    "  \"error\": true,\n" +
-                                    "  \"status\": 401\n" +
-                                    "}")
-                    )),
-                    @ApiResponse(responseCode = "500", description = "Server Error",content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(example = "{\n" +
-                                    "  \"message\": \"{$error_message}\",\n" +
-                                    "  \"error\": true,\n" +
-                                    "  \"status\": 500\n" +
-                                    "}")
-                    ))
-            }
-    )
+    @Operation(summary = "Delete user by ID")
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id) throws ResourceNotFoundException {
-        return userService.deleteUser(id);
+    public ResponseEntity<Object> delete(@PathVariable Long id) throws ResourceNotFoundException {
+        return this.userService.deleteUser(id);
     }
-
 }

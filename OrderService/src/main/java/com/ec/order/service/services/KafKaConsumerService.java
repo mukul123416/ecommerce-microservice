@@ -6,16 +6,19 @@ import com.ec.order.service.payloads.OrderValidateStatusDetails;
 import com.ec.order.service.payloads.PaymentStatusDetails;
 import com.ec.order.service.repo.OrderRepository;
 import com.google.gson.Gson;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
 @Service
 public class KafKaConsumerService {
-    @Autowired
-    private OrderRepository orderRepository;
+
+    private final OrderRepository orderRepository;
 
     private final Gson gson = new Gson();
+
+    public KafKaConsumerService(OrderRepository orderRepository) {
+        this.orderRepository = orderRepository;
+    }
 
     @KafkaListener(topics = "payment-success",groupId = "${spring.kafka.consumer.group-id}")
     public void paymentSuccessConsume(String event) throws ResourceNotFoundException {
@@ -41,12 +44,12 @@ public class KafKaConsumerService {
     private void updateOrderStatus(Long orderId, String status)
             throws ResourceNotFoundException {
 
-        Order order = orderRepository.findById(orderId)
+        Order order = this.orderRepository.findById(orderId)
                 .orElseThrow(() ->
                         new ResourceNotFoundException("Order not found with id : " + orderId));
 
         order.setStatus(status);
-        orderRepository.save(order);
+        this.orderRepository.save(order);
     }
 }
 

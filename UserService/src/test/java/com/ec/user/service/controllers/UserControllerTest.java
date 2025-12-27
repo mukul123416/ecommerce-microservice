@@ -12,9 +12,6 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.util.Arrays;
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
@@ -69,7 +66,6 @@ class UserControllerTest {
 
     @Test
     void testGetAllUsers() {
-        List<User> users = Arrays.asList(user);
         when(userService.getAllUsers()).thenReturn(response("Fetched Successful"));
 
         ResponseEntity<?> response = userController.getAll();

@@ -7,7 +7,6 @@ import com.ec.user.service.payloads.Order;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.retry.annotation.Retry;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
@@ -19,17 +18,22 @@ import java.util.List;
 @Slf4j
 @Component
 public class OrderClient {
-    @Autowired
-    private RestTemplate restTemplate;
-    @Autowired
-    private OrderService orderService;
+
+    private final RestTemplate restTemplate;
+
+    private final OrderService orderService;
+
+    public OrderClient(RestTemplate restTemplate, OrderService orderService) {
+        this.restTemplate = restTemplate;
+        this.orderService = orderService;
+    }
 
     @Retry(name = "orderServiceByUserId",fallbackMethod = "getOrdersByUserIdFallback")
     @CircuitBreaker(name = "orderServiceByUserId")
     public List<OrderDTO> getOrdersByUserId(Long userId) {
         log.info("Calling OrderService...");
         ApiResponse<List<OrderDTO>> apiResponse =
-                restTemplate.exchange(
+                this.restTemplate.exchange(
                         "http://ORDERSERVICE/orders/user/{userId}",
                         HttpMethod.GET,
                         null,
@@ -52,11 +56,11 @@ public class OrderClient {
     )
     public ApiResponse<List<OrderWithUserIdDTO>> getAll() {
         log.info("Calling ORDERSERVICE /orders...");
-        return orderService.getAll();
+        return this.orderService.getAll();
     }
 
     public ApiResponse<List<OrderWithUserIdDTO>> getAllFallback(Exception ex) {
-        log.error("Order service DOWN");
+        log.error("Order service DOWN : {}",ex.getMessage());
         return new ApiResponse<>(
                 Collections.emptyList(),
                 "Order service unavailable",
@@ -69,13 +73,13 @@ public class OrderClient {
             name = "ORDERPLACE",
             fallbackMethod = "placeOrderFallback"
     )
-    public ApiResponse<?> placeOrder(Order order) {
+    public ApiResponse<Object> placeOrder(Order order) {
         log.info("Calling ORDERSERVICE /place orders...");
-        return orderService.placeOrder(order);
+        return this.orderService.placeOrder(order);
     }
 
-    public ApiResponse<?> placeOrderFallback(Order order,Exception ex) {
-        log.error("Order service DOWN");
+    public ApiResponse<Object> placeOrderFallback(Order order,Exception ex) {
+        log.error("Order service DOWN for this product : {} {}",order.getProductId(),ex.getMessage());
         return new ApiResponse<>(
                 null,
                 "Order service unavailable",

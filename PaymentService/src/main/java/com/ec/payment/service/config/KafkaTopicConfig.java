@@ -9,12 +9,12 @@ import org.springframework.kafka.config.TopicBuilder;
 public class KafkaTopicConfig {
 
     @Bean
-    public NewTopic PaymentSuccess(){
+    public NewTopic paymentSuccess(){
         return TopicBuilder.name("payment-success")
                 .build();
     }
     @Bean
-    public NewTopic PaymentFailed(){
+    public NewTopic paymentFailed(){
         return TopicBuilder.name("payment-failed")
                 .build();
     }

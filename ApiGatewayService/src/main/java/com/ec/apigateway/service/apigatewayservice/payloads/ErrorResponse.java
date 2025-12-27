@@ -1,4 +1,4 @@
-package com.ec.apigateway.service.ApiGatewayService.payloads;
+package com.ec.apigateway.service.apigatewayservice.payloads;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;

@@ -27,7 +27,7 @@ public class Payment {
     @Schema(
             description = "Unique payment identifier",
             example = "701",
-            required = true,
+            requiredMode = Schema.RequiredMode.REQUIRED,
             accessMode = Schema.AccessMode.READ_ONLY
     )
     private Long id;
