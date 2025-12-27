@@ -18,6 +18,7 @@ import java.util.Random;
 public class KafKaConsumerService {
 
     private final Gson gson = new Gson();
+    private static final Random random = new Random();
 
     private final EmailService emailService;
     private final UserClient userClient;
@@ -161,7 +162,7 @@ public class KafKaConsumerService {
 
         if (userDTO != null && userDTO.getEmail() != null) {
 
-            String otp = new DecimalFormat("000000").format(new Random().nextInt(999999));
+            String otp = new DecimalFormat("000000").format(random.nextInt(999999));
 
             String subject = "Order Placed Successfully! - Order #" + dto.getOrderId();
 

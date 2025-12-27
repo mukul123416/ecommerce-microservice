@@ -52,7 +52,7 @@ class OrderServiceTest {
     // 1. addOrder() tests
     // ============================
     @Test
-    void shouldAddOrderSuccessfully() throws ExecutionException, InterruptedException {
+    void shouldAddOrderSuccessfully() {
         Order order = new Order();
         order.setId(1L);
         order.setUserId(1L);
