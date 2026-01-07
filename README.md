@@ -66,7 +66,7 @@ Clone the Repository:
 
 Bash
 
-git clone https://github.com/mukul123416/ecommerce-microservices.git
+git clone https://github.com/mukul123416/ecommerce-microservice.git
 cd ecommerce-microservices
 Build the Project:
 
@@ -83,7 +83,7 @@ Eureka Dashboard: http://localhost:8761
 
 Actuator Health: http://localhost:<port>/actuator/health
 
-SonarCloud Dashboard: [Link to your SonarCloud project]
+SonarCloud Dashboard: https://sonarcloud.io/projects
 
 🧑‍💻 Author
 Mukul - Backend Engineer / Java Specialist
