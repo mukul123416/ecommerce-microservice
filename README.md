@@ -29,6 +29,12 @@ This project follows a **Decoupled Microservices Architecture** to ensure indepe
 graph TD
     %% User Entry
     User((User/Client)) -->|HTTPS/REST| Gateway[API Gateway: 8086]
+    
+    %% Control Plane (Infrastructure Services)
+    subgraph "Control Plane (Infrastructure)"
+        Eureka[Service Registry: 8761]
+        Config[Config Server: 8087]
+    end
 
     %% Business Logic Layer
     subgraph "Core Business Services"
@@ -38,6 +44,14 @@ graph TD
         Gateway --> PaySvc[Payment Svc: 8084]
         Gateway --> InvSvc[Inventory Service: 8085]
     end
+
+    %% Registry Registration (Dashed Lines)
+    UserSvc -.->|Register| Eureka
+    ProdSvc -.->|Register| Eureka
+    OrderSvc -.->|Register| Eureka
+    PaySvc -.->|Register| Eureka
+    InvSvc -.->|Register| Eureka
+    Gateway -.->|Fetch Routes| Eureka
 
     %% Messaging Layer
     subgraph "Event-Driven Message Bus (Kafka)"
@@ -57,9 +71,12 @@ graph TD
     %% Color Coding & Visibility Fixes
     style Gateway fill:#FF8C00,stroke:#333,stroke-width:2px,color:#fff
     style Kafka fill:#282C34,stroke:#55f,color:#61DAFB,stroke-width:3px
+    style Eureka fill:#2ECC71,stroke:#333,color:#fff
+    style Config fill:#2ECC71,stroke:#333,color:#fff
     style DB1 fill:#34495E,stroke:#fff,color:#fff
     style DB2 fill:#34495E,stroke:#fff,color:#fff
     style DB3 fill:#34495E,stroke:#fff,color:#fff
     style UserSvc fill:#f9f9f9,stroke:#333,color:#000
     style ProdSvc fill:#f9f9f9,stroke:#333,color:#000
     style OrderSvc fill:#f9f9f9,stroke:#333,color:#000
+    style InvSvc fill:#f9f9f9,stroke:#333,color:#000
