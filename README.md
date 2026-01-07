@@ -90,6 +90,28 @@ Mukul - Backend Engineer / Java Specialist
 
 "Built with a focus on scalability, fault tolerance, and automated delivery."
 
+# 🚀 E-Commerce Microservices Ecosystem
+
+A production-ready, cloud-native microservices architecture built with **Java 17**, **Spring Boot 3**, and **Spring Cloud**. This project demonstrates a complete DevOps lifecycle, from code quality (Sonar) to containerization (Docker) and event-driven communication (Kafka).
+
+---
+
+## 🏗️ Architecture Overview
+
+This project follows a **Decoupled Microservices Architecture** with the following components:
+
+* **Service Registry:** Netflix Eureka for dynamic service discovery.
+* **API Gateway:** Spring Cloud Gateway as a single entry point with centralized routing.
+* **Config Server:** Centralized Git-based configuration management.
+* **Business Services:** User, Product, Order, Payment, Inventory, and Notification services.
+* **Event-Bus:** Apache Kafka for asynchronous inter-service communication.
+* **Database:** PostgreSQL (with `host.docker.internal` mapping for local/container hybrid connectivity).
+
+---
+
+## 📊 System Design Diagram
+
+```mermaid
 graph TD
     User((User/Client)) -->|Request| Gateway[API Gateway: 8086]
     
