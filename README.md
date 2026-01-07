@@ -36,32 +36,25 @@ graph TD
         Config[Config Server: 8087]
     end
 
-    %% Config Server Connection (Only to Eureka)
+    %% Config Server only points to Registry
     Config -.->|Registers| Eureka
 
     %% Business Logic Layer
     subgraph "Core Business Services"
-        UserSvc[User Service: 8081]
-        ProdSvc[Product Service: 8082]
-        OrderSvc[Order Service: 8083]
-        PaySvc[Payment Svc: 8084]
-        InvSvc[Inventory Service: 8085]
+        Gateway --> UserSvc[User Service: 8081]
+        Gateway --> ProdSvc[Product Service: 8082]
+        Gateway --> OrderSvc[Order Service: 8083]
+        Gateway --> PaySvc[Payment Svc: 8084]
+        Gateway --> InvSvc[Inventory Service: 8085]
     end
 
-    %% Routing
-    Gateway --> UserSvc
-    Gateway --> ProdSvc
-    Gateway --> OrderSvc
-    Gateway --> PaySvc
-    Gateway --> InvSvc
-
     %% Registry Registration & Discovery
-    UserSvc -.->|Register/Discovery| Eureka
-    ProdSvc -.->|Register/Discovery| Eureka
-    OrderSvc -.->|Register/Discovery| Eureka
-    PaySvc -.->|Register/Discovery| Eureka
-    InvSvc -.->|Register/Discovery| Eureka
-    Gateway -.->|Fetch Routes| Eureka
+    UserSvc -.-> Eureka
+    ProdSvc -.-> Eureka
+    OrderSvc -.-> Eureka
+    PaySvc -.-> Eureka
+    InvSvc -.-> Eureka
+    Gateway -.-> Eureka
 
     %% Messaging Layer
     subgraph "Event-Driven Message Bus (Kafka)"
@@ -78,7 +71,7 @@ graph TD
         OrderSvc --> DB3[(Postgres: Order DB)]
     end
 
-    %% Color Coding & Visibility Fixes
+    %% Style Fixes for Visibility
     style Gateway fill:#FF8C00,stroke:#333,stroke-width:2px,color:#fff
     style Kafka fill:#282C34,stroke:#55f,color:#61DAFB,stroke-width:3px
     style Eureka fill:#2ECC71,stroke:#333,color:#fff
