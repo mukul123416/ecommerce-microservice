@@ -36,6 +36,15 @@ graph TD
         Config[Config Server: 8087]
     end
 
+    %% Registry & Config Connections
+    Config -.->|Registers| Eureka
+    UserSvc -.->|Registers & Fetches Config| Eureka
+    ProdSvc -.->|Registers & Fetches Config| Eureka
+    OrderSvc -.->|Registers & Fetches Config| Eureka
+    PaySvc -.->|Registers & Fetches Config| Eureka
+    InvSvc -.->|Registers & Fetches Config| Eureka
+    Gateway -.->|Discovery & Routing| Eureka
+
     %% Business Logic Layer
     subgraph "Core Business Services"
         Gateway --> UserSvc[User Service: 8081]
@@ -44,14 +53,6 @@ graph TD
         Gateway --> PaySvc[Payment Svc: 8084]
         Gateway --> InvSvc[Inventory Service: 8085]
     end
-
-    %% Registry Registration (Dashed Lines)
-    UserSvc -.->|Register| Eureka
-    ProdSvc -.->|Register| Eureka
-    OrderSvc -.->|Register| Eureka
-    PaySvc -.->|Register| Eureka
-    InvSvc -.->|Register| Eureka
-    Gateway -.->|Fetch Routes| Eureka
 
     %% Messaging Layer
     subgraph "Event-Driven Message Bus (Kafka)"
@@ -68,7 +69,7 @@ graph TD
         OrderSvc --> DB3[(Postgres: Order DB)]
     end
 
-    %% Color Coding & Visibility Fixes
+    %% Style Fixes for Visibility
     style Gateway fill:#FF8C00,stroke:#333,stroke-width:2px,color:#fff
     style Kafka fill:#282C34,stroke:#55f,color:#61DAFB,stroke-width:3px
     style Eureka fill:#2ECC71,stroke:#333,color:#fff
@@ -80,3 +81,4 @@ graph TD
     style ProdSvc fill:#f9f9f9,stroke:#333,color:#000
     style OrderSvc fill:#f9f9f9,stroke:#333,color:#000
     style InvSvc fill:#f9f9f9,stroke:#333,color:#000
+    style NotifSvc fill:#f9f9f9,stroke:#333,color:#000
