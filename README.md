@@ -24,16 +24,13 @@ This project follows a **Decoupled Microservices Architecture** to ensure indepe
 ---
 
 ## 📊 Advanced System Architecture
-
-```mermaid
 graph TD
     %% User Entry
     User((User/Client)) -->|HTTPS/REST| Gateway[API Gateway: 8086]
     
-    %% Control Plane (Infrastructure Services)
-        Eureka[Service Registry: 8761]
-        Config[Config Server: 8087]
-    end
+    %% Infrastructure Services (No Subgraph)
+    Eureka[Service Registry: 8761]
+    Config[Config Server: 8087]
 
     %% Config Server only points to Registry
     Config -.->|Registers| Eureka
@@ -83,3 +80,5 @@ graph TD
     style OrderSvc fill:#f9f9f9,stroke:#333,color:#000
     style InvSvc fill:#f9f9f9,stroke:#333,color:#000
     style NotifSvc fill:#f9f9f9,stroke:#333,color:#000
+```mermaid
+fill:#f9f9f9,stroke:#333,color:#000
