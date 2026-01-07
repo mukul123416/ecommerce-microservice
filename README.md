@@ -23,18 +23,22 @@ This project follows a **Decoupled Microservices Architecture** to ensure indepe
 
 ---
 
-## 📊 System Design
+## 📊 Advanced System Architecture
 
 ```mermaid
 graph TD
-    User((User/Client)) -->|Request| Gateway[API Gateway: 8086]
+    %% User Entry
+    User((User/Client)) -->|HTTPS/REST| Gateway[API Gateway: 8086]
     
-    subgraph "Service Discovery & Config"
+    %% Central Services
+    subgraph "Control Plane (Central Services)"
         Eureka[Service Registry: 8761]
         Config[Config Server: 8087]
+        Tracing[Zipkin/Sleuth Tracing]
     end
 
-    subgraph "Internal Microservices"
+    %% Business Logic Layer
+    subgraph "Core Business Services"
         Gateway --> UserSvc[User Service: 8081]
         Gateway --> ProdSvc[Product Service: 8082]
         Gateway --> OrderSvc[Order Service: 8083]
@@ -42,20 +46,30 @@ graph TD
         Gateway --> InvSvc[Inventory Service: 8085]
     end
 
-    subgraph "Event-Driven Message Bus"
-        ProdSvc --> Kafka((Kafka Broker))
+    %% Messaging Layer
+    subgraph "Event-Driven Message Bus (Kafka)"
+        ProdSvc --> Kafka{Kafka Broker}
         OrderSvc --> Kafka
         InvSvc --> Kafka
         Kafka --> NotifSvc[Notification Svc: 8089]
     end
 
-    subgraph "Infrastructure"
-        UserSvc --> DB[(Postgres DB)]
-        ProdSvc --> DB
-        Config --> Git[(Git Config Repo)]
+    %% Data Layer
+    subgraph "Persistence Layer (Databases)"
+        UserSvc --> DB1[(Postgres: User DB)]
+        ProdSvc --> DB2[(Postgres: Product DB)]
+        OrderSvc --> DB3[(Postgres: Order DB)]
     end
 
-    style Gateway fill:#f96,stroke:#333,stroke-width:2px
-    style Kafka fill:#55f,color:#fff
-    style Eureka fill:#4b5,color:#fff
-    style DB fill:#eee,stroke:#333
+    %% Color Coding & Visibility Fixes
+    style Gateway fill:#FF8C00,stroke:#333,stroke-width:2px,color:#fff
+    style Kafka fill:#282C34,stroke:#55f,color:#61DAFB,stroke-width:3px
+    style Eureka fill:#2ECC71,stroke:#333,color:#fff
+    style Config fill:#2ECC71,stroke:#333,color:#fff
+    style Tracing fill:#E74C3C,stroke:#333,color:#fff
+    style DB1 fill:#34495E,stroke:#fff,color:#fff
+    style DB2 fill:#34495E,stroke:#fff,color:#fff
+    style DB3 fill:#34495E,stroke:#fff,color:#fff
+    style UserSvc fill:#f9f9f9,stroke:#333,color:#000
+    style ProdSvc fill:#f9f9f9,stroke:#333,color:#000
+    style OrderSvc fill:#f9f9f9,stroke:#333,color:#000
