@@ -31,7 +31,6 @@ graph TD
     User((User/Client)) -->|HTTPS/REST| Gateway[API Gateway: 8086]
     
     %% Control Plane (Infrastructure Services)
-    subgraph "Control Plane (Infrastructure)"
         Eureka[Service Registry: 8761]
         Config[Config Server: 8087]
     end
