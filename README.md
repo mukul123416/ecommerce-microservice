@@ -89,3 +89,35 @@ SonarCloud Dashboard: https://sonarcloud.io/projects
 Mukul - Backend Engineer / Java Specialist
 
 "Built with a focus on scalability, fault tolerance, and automated delivery."
+
+graph TD
+    User((User/Client)) -->|Request| Gateway[API Gateway: 8086]
+    
+    subgraph "Service Discovery & Config"
+        Eureka[Service Registry: 8761]
+        Config[Config Server: 8087]
+    end
+
+    subgraph "Internal Microservices"
+        Gateway --> UserSvc[User Service: 8081]
+        Gateway --> ProdSvc[Product Service: 8082]
+        Gateway --> OrderSvc[Order Service: 8083]
+        Gateway --> PaySvc[Payment Svc: 8084]
+    end
+
+    subgraph "Event-Driven Message Bus"
+        ProdSvc --> Kafka((Kafka Broker))
+        OrderSvc --> Kafka
+        Kafka --> NotifSvc[Notification Svc: 8089]
+    end
+
+    subgraph "Infrastructure"
+        UserSvc --> DB[(PostgreSQL)]
+        ProdSvc --> DB
+        Config --> Git[(Git Repo)]
+    end
+
+    %% Styles
+    style Gateway fill:#f96,stroke:#333,stroke-width:2px
+    style Kafka fill:#55f,color:#fff
+    style Eureka fill:#4b5,color:#fff
