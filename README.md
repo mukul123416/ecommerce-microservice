@@ -30,12 +30,12 @@ graph TD
     %% User Entry
     User((User/Client)) -->|HTTPS/REST| Gateway[API Gateway: 8086]
     
-    %% Infrastructure Services (No Subgraph)
+    %% Infrastructure Services
     Eureka[Service Registry: 8761]
     Config[Config Server: 8087]
 
-    %% Config Server only points to Registry
-    Config -.->|Registers| Eureka
+    %% Infrastructure Connection
+    Config -.-> Eureka
 
     %% Business Logic Layer
     subgraph "Core Business Services"
@@ -46,7 +46,7 @@ graph TD
         Gateway --> InvSvc[Inventory Service: 8085]
     end
 
-    %% Registry Registration & Discovery
+    %% Registry Discovery
     UserSvc -.-> Eureka
     ProdSvc -.-> Eureka
     OrderSvc -.-> Eureka
@@ -54,22 +54,24 @@ graph TD
     InvSvc -.-> Eureka
     Gateway -.-> Eureka
 
-    %% Messaging Layer
-    subgraph "Event-Driven Message Bus (Kafka)"
-        ProdSvc --> Kafka{Kafka Broker}
-        OrderSvc --> Kafka
-        InvSvc --> Kafka
+    %% Messaging Layer (Overlap Fixed)
+    subgraph "Message Bus"
+        Kafka{Kafka Broker}
         Kafka --> NotifSvc[Notification Svc: 8089]
     end
+    
+    ProdSvc --> Kafka
+    OrderSvc --> Kafka
+    InvSvc --> Kafka
 
     %% Data Layer
-    subgraph "Persistence Layer (Databases)"
+    subgraph "Persistence Layer"
         UserSvc --> DB1[(Postgres: User DB)]
         ProdSvc --> DB2[(Postgres: Product DB)]
         OrderSvc --> DB3[(Postgres: Order DB)]
     end
 
-    %% Style Fixes for Visibility
+    %% Style Fixes
     style Gateway fill:#FF8C00,stroke:#333,stroke-width:2px,color:#fff
     style Kafka fill:#282C34,stroke:#55f,color:#61DAFB,stroke-width:3px
     style Eureka fill:#2ECC71,stroke:#333,color:#fff
