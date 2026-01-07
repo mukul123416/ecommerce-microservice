@@ -57,9 +57,6 @@ graph TD
     %% Color Coding & Visibility Fixes
     style Gateway fill:#FF8C00,stroke:#333,stroke-width:2px,color:#fff
     style Kafka fill:#282C34,stroke:#55f,color:#61DAFB,stroke-width:3px
-    style Eureka fill:#2ECC71,stroke:#333,color:#fff
-    style Config fill:#2ECC71,stroke:#333,color:#fff
-    style Tracing fill:#E74C3C,stroke:#333,color:#fff
     style DB1 fill:#34495E,stroke:#fff,color:#fff
     style DB2 fill:#34495E,stroke:#fff,color:#fff
     style DB3 fill:#34495E,stroke:#fff,color:#fff
