@@ -24,6 +24,8 @@ This project follows a **Decoupled Microservices Architecture** to ensure indepe
 ---
 
 ## 📊 Advanced System Architecture
+
+```mermaid
 graph TD
     %% User Entry
     User((User/Client)) -->|HTTPS/REST| Gateway[API Gateway: 8086]
@@ -80,5 +82,3 @@ graph TD
     style OrderSvc fill:#f9f9f9,stroke:#333,color:#000
     style InvSvc fill:#f9f9f9,stroke:#333,color:#000
     style NotifSvc fill:#f9f9f9,stroke:#333,color:#000
-```mermaid
-fill:#f9f9f9,stroke:#333,color:#000
