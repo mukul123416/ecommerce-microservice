@@ -46,15 +46,16 @@ graph TD
         Gateway --> InvSvc[Inventory Service: 8085]
     end
 
-    %% Registry Discovery
+    %% Registry Discovery & Registration
     UserSvc -.-> Eureka
     ProdSvc -.-> Eureka
     OrderSvc -.-> Eureka
     PaySvc -.-> Eureka
     InvSvc -.-> Eureka
+    NotifSvc -.-> Eureka
     Gateway -.-> Eureka
 
-    %% Messaging Layer (Overlap Fixed)
+    %% Messaging Layer
     subgraph "Message Bus"
         Kafka{Kafka Broker}
         Kafka --> NotifSvc[Notification Svc: 8089]
