@@ -29,13 +29,6 @@ This project follows a **Decoupled Microservices Architecture** to ensure indepe
 graph TD
     %% User Entry
     User((User/Client)) -->|HTTPS/REST| Gateway[API Gateway: 8086]
-    
-    %% Central Services
-    subgraph "Control Plane (Central Services)"
-        Eureka[Service Registry: 8761]
-        Config[Config Server: 8087]
-        Tracing[Zipkin/Sleuth Tracing]
-    end
 
     %% Business Logic Layer
     subgraph "Core Business Services"
